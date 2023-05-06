@@ -1,31 +1,32 @@
-import LangChain from 'langchain';
-import { Pinecone } from 'pinecone';
-import OpenAI from 'openai';
+import dotenv from 'dotenv';
+import Pinecone from 'pinecone';
+import { OpenAI } from "langchain/llms/openai";
+
+dotenv.config();
 
 export class Chatbot {
-    private static langChain = new LangChain(/* Your LangChain API key */);
-    private static pinecone = new Pinecone(/* Your Pinecone API key */);
-    private static openai = new OpenAI(/* Your OpenAI API key */);
-  
-    public static async getAnswer(query: string): Promise<string> {
-      try {
-        // Pre-process the query
-        const processedQuery = await this.langChain.preprocess(query);
-  
-        // Fetch contextualized data
-        const contextualData = await this.pinecone.fetchContextualData(processedQuery);
-  
-        // Use GPT-3/GPT-4 to generate a response
-        const response = await this.openai.generateResponse(processedQuery, contextualData);
-  
-        // Post-process the response
-        const finalResponse = await this.langChain.postprocess(response);
-  
-        return finalResponse;
-      } catch (error) {
-        console.error(error);
-        return 'An error occurred while processing your query.';
-      }
+  private static pineconeInstance = new Pinecone(process.env.PINECONE_API_KEY);
+  private static openaiInstance = new OpenAI(process.env.OPENAI_API_KEY);
+
+  public static async getAnswer(query: string): Promise<string> {
+    try {
+      // Your existing code
+
+      // Fetch contextualized data
+      const contextualData = await this.pineconeInstance.fetchContextualData(
+        process.env.PINECONE_ENVIRONMENT,
+        process.env.PINECONE_INDEX_NAME,
+        query,
+      );
+
+      // Your existing code
+    } catch (error) {
+      console.error(error);
+      return 'An error occurred while processing your query.';
     }
+    // Add a default return statement
+    return 'An unexpected error occurred.';
   }
+}
+
   
