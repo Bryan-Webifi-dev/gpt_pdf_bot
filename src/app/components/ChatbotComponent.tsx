@@ -2,27 +2,35 @@ import React, { useState } from 'react';
 import { Chatbot } from '../lib/Chatbot';
 
 const ChatbotComponent: React.FC = () => {
-    const [query, setQuery] = useState('');
-  
-    const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      setQuery(event.target.value);
-    };
-  
-    const handleQuerySubmit = async (event: React.FormEvent) => {
-      event.preventDefault();
-      const response = await Chatbot.getAnswer(query);
-      console.log(response);
-    };
-  
-    return (
-      <div>
-        <form onSubmit={handleQuerySubmit}>
-          <input type="text" value={query} onChange={handleQueryChange} />
-          <button type="submit">Ask</button>
-        </form>
-      </div>
-    );
+  const [query, setQuery] = useState('');
+  const [response, setResponse] = useState('');
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const answer = await Chatbot.getAnswer(query);
+    setResponse(answer);
   };
-  
-  export default ChatbotComponent;
+
+  return (
+    <div>
+      <h1>Chatbot</h1>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          placeholder="Ask your question"
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+        />
+        <button type="submit">Submit</button>
+      </form>
+      <div>
+        <p>Chatbot's response:</p>
+        <p>{response}</p>
+      </div>
+    </div>
+  );
+};
+
+export default ChatbotComponent;
+
   
